@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePrivy } from '@privy-io/react-auth'
 
 // Placeholder data types
 export interface VaultData {
@@ -43,15 +44,51 @@ export interface PerformanceData {
 
 // Custom hook to provide placeholder data
 export const usePlaceholderData = () => {
-  const [isConnected, setIsConnected] = useState(false)
+  const { ready, authenticated, user, login, logout } = usePrivy()
   const [userAddress, setUserAddress] = useState<string | null>(null)
 
-  // Vault data
+  // Update user address when authenticated
+  useEffect(() => {
+    if (authenticated && user?.wallet?.address) {
+      setUserAddress(user.wallet.address)
+    } else {
+      setUserAddress(null)
+    }
+  }, [authenticated, user])
+
+  const isConnected = ready && authenticated
+
+  // TODO: Fetch actual balance from blockchain
+  // For now, using wallet connection state to determine if we show real or mock data
+  const [walletBalance, setWalletBalance] = useState<number>(0)
+
+  useEffect(() => {
+    // Fetch wallet balance when connected
+    if (isConnected && userAddress) {
+      // TODO: Replace with actual Flow blockchain call
+      // For demo purposes, simulating an API call
+      const fetchBalance = async () => {
+        try {
+          // Simulated balance fetch - replace with actual Flow SDK call
+          // const balance = await fcl.query({ ... })
+          setWalletBalance(15234.56) // Mock value for now
+        } catch (error) {
+          console.error('Error fetching balance:', error)
+          setWalletBalance(0)
+        }
+      }
+      fetchBalance()
+    } else {
+      setWalletBalance(0)
+    }
+  }, [isConnected, userAddress])
+
+  // Vault data - now dynamic based on wallet connection
   const vaultData: VaultData = {
-    balance: 15234.56,
-    totalEarned: 1847.32,
-    lastHarvestTime: Math.floor(Date.now() / 1000) - 7200, // 2 hours ago
-    apy: 12.5,
+    balance: isConnected ? walletBalance : 0,
+    totalEarned: isConnected ? 1847.32 : 0, // TODO: Fetch from blockchain
+    lastHarvestTime: isConnected ? Math.floor(Date.now() / 1000) - 7200 : 0, // 2 hours ago
+    apy: isConnected ? 12.5 : 0, // TODO: Fetch from blockchain
   }
 
   // Protocol statistics
@@ -127,15 +164,23 @@ export const usePlaceholderData = () => {
     }
   )
 
-  // Simulate wallet connection
-  const connectWallet = () => {
-    setIsConnected(true)
-    setUserAddress('0x1234567890abcdef')
+  // Wallet connection using Privy
+  const connectWallet = async () => {
+    try {
+      await login()
+      // User state will be updated through useEffect above
+    } catch (error) {
+      console.error('Error connecting wallet:', error)
+    }
   }
 
-  const disconnectWallet = () => {
-    setIsConnected(false)
-    setUserAddress(null)
+  const disconnectWallet = async () => {
+    try {
+      await logout()
+      // User state will be updated through useEffect above
+    } catch (error) {
+      console.error('Error disconnecting wallet:', error)
+    }
   }
 
   return {

@@ -9,6 +9,7 @@ import { Box } from '@mui/material'
 import darkTheme from '@/config/darkTheme'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import { PrivyProvider } from '@privy-io/react-auth'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -30,23 +31,38 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <body className={inter.className}>
-        <ThemeProvider theme={darkTheme}>
-          <CssBaseline />
-          <Box
-            sx={{
-              minHeight: '100vh',
-              display: 'flex',
-              flexDirection: 'column',
-              backgroundColor: 'background.default',
-            }}
-          >
-            <Header />
-            <Box component="main" sx={{ flexGrow: 1 }}>
-              {children}
+        <PrivyProvider
+          appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || 'cmg9f15co00c7la0ct488b41v'}
+          config={{
+            appearance: {
+              theme: 'dark',
+              accentColor: '#6366F1',
+              logo: 'https://autoflow.example.com/logo.png',
+            },
+            loginMethods: ['email', 'wallet', 'google', 'twitter'],
+            embeddedWallets: {
+              createOnLogin: 'users-without-wallets',
+            },
+          }}
+        >
+          <ThemeProvider theme={darkTheme}>
+            <CssBaseline />
+            <Box
+              sx={{
+                minHeight: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+                backgroundColor: 'background.default',
+              }}
+            >
+              <Header />
+              <Box component="main" sx={{ flexGrow: 1 }}>
+                {children}
+              </Box>
+              <Footer />
             </Box>
-            <Footer />
-          </Box>
-        </ThemeProvider>
+          </ThemeProvider>
+        </PrivyProvider>
       </body>
     </html>
   )

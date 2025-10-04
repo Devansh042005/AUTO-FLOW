@@ -150,7 +150,10 @@ export default function Landing() {
                     </div>
                   </div>
 
-                  <Button className="w-full bg-gradient-to-r from-indigo-500 to-purple-700 hover:from-indigo-600 hover:to-purple-800 text-white font-semibold h-12 rounded-lg transition-all">
+                  <Button
+                    className="w-full bg-gradient-to-r from-indigo-500 to-purple-700 hover:from-indigo-600 hover:to-purple-800 text-white font-semibold h-12 rounded-lg transition-all"
+                    onClick={connectWallet}
+                  >
                     View Dashboard
                   </Button>
                 </div>
