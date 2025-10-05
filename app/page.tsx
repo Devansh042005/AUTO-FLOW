@@ -9,11 +9,18 @@ import SchedulerControls from '@/components/SchedulerControls'
 import ActionsPanel from '@/components/ActionsPanel'
 import PerformanceChart from '@/components/PerformanceChart'
 import Landing from '@/components/Landing'
+import OnboardingModal from '@/components/OnboardingModal'
+import ActivityFeed, { generateMockActivities } from '@/components/ActivityFeed'
+import Analytics from '@/components/Analytics'
 import { usePlaceholderData } from '@/hooks/usePlaceholderData'
-import { Sparkles, Zap, TrendingUp, Info } from 'lucide-react'
+import { Sparkles, Zap, TrendingUp, Info, BarChart3 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useState } from 'react'
 
 export default function Home() {
   const { isConnected } = usePlaceholderData()
+  const [showAnalytics, setShowAnalytics] = useState(false)
+  const mockActivities = generateMockActivities()
 
   // Show landing page if wallet is not connected
   if (!isConnected) {
@@ -23,6 +30,7 @@ export default function Home() {
   // Show dashboard if wallet is connected
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
+      <OnboardingModal />
       {/* Hero Section */}
       <Box className="mb-12 relative">
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-cyan-500/10 rounded-3xl blur-3xl" />
@@ -120,6 +128,28 @@ export default function Home() {
       {/* Actions Panel - Full Width */}
       <Box className="mt-8" data-section="actions">
         <ActionsPanel />
+      </Box>
+
+      {/* Activity Feed & Analytics Toggle */}
+      <Box className="mt-8">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-white">
+            {showAnalytics ? 'Analytics Dashboard' : 'Recent Activity'}
+          </h2>
+          <Button
+            onClick={() => setShowAnalytics(!showAnalytics)}
+            className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold"
+          >
+            <BarChart3 className="w-4 h-4 mr-2" />
+            {showAnalytics ? 'Show Activity' : 'Show Analytics'}
+          </Button>
+        </div>
+
+        {showAnalytics ? (
+          <Analytics />
+        ) : (
+          <ActivityFeed activities={mockActivities} maxItems={5} network="testnet" />
+        )}
       </Box>
 
       {/* Info Banner */}

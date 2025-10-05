@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { usePlaceholderData } from '@/hooks/usePlaceholderData'
 import { formatAddress } from '@/utils/formatters'
+import NetworkIndicator from '@/components/NetworkIndicator'
 import {
   LayoutDashboard,
   Building2,
@@ -84,8 +85,9 @@ export default function Header() {
             })}
           </div>
 
-          {/* Wallet Connect */}
-          <div>
+          {/* Wallet Connect & Network */}
+          <div className="flex items-center gap-3">
+            <NetworkIndicator network="testnet" expectedNetwork="testnet" />
             {isConnected ? (
               <div className="flex items-center gap-2">
                 <Badge className="px-3 py-1.5 bg-gradient-to-r from-green-400 to-cyan-400 text-zinc-900 text-xs font-bold border-0">
@@ -97,6 +99,7 @@ export default function Header() {
                   size="sm"
                   className="border border-red-400/30 text-red-400 hover:border-red-500 hover:bg-red-500/10"
                   onClick={disconnectWallet}
+                  aria-label="Disconnect wallet"
                 >
                   Disconnect
                 </Button>
@@ -105,6 +108,7 @@ export default function Header() {
               <Button
                 className="bg-gradient-to-r from-indigo-500 to-purple-700 font-bold px-6 h-11 rounded-lg text-base shadow-lg transition hover:from-indigo-600 hover:to-purple-800 hover:scale-105"
                 onClick={connectWallet}
+                aria-label="Connect wallet"
               >
                 <Wallet className="w-5 h-5 mr-2" />
                 Connect Wallet

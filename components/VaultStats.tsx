@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { usePlaceholderData } from '@/hooks/usePlaceholderData'
 import { formatCurrency, formatPercentage, formatCompactNumber } from '@/utils/formatters'
+import { InfoTooltip } from '@/components/ui/tooltip'
 
 const icons = {
   Wallet: <Wallet size={28} />,
@@ -38,6 +39,7 @@ export default function VaultStats() {
       icon: icons.Wallet,
       gradient: gradients.blue,
       color: 'indigo-400',
+      tooltip: 'Your total deposited balance in the vault, including all rewards earned.',
     },
     {
       title: 'Total Earned',
@@ -47,6 +49,7 @@ export default function VaultStats() {
       icon: icons.DollarSign,
       gradient: gradients.pink,
       color: 'pink-400',
+      tooltip: 'Total earnings from yield farming. Performance fee (10%) and caller rewards (1%) are automatically deducted.',
     },
     {
       title: 'Current APY',
@@ -56,6 +59,7 @@ export default function VaultStats() {
       icon: icons.Percent,
       gradient: gradients.cyan,
       color: 'cyan-400',
+      tooltip: 'Annual Percentage Yield. This is a variable rate that changes based on protocol performance.',
     },
     {
       title: 'Protocol TVL',
@@ -65,6 +69,7 @@ export default function VaultStats() {
       icon: icons.TrendingUp,
       gradient: gradients.green,
       color: 'green-400',
+      tooltip: 'Total Value Locked across all AutoFlow vaults on the Flow blockchain.',
     },
   ]
 
@@ -86,8 +91,14 @@ export default function VaultStats() {
                 <ArrowUp size={14} className="inline mr-1" /> {stat.change}
               </Badge>
             </div>
-            <div className="uppercase tracking-wide font-semibold text-zinc-400 mb-1 text-xs">
-              {stat.title}
+            <div className="flex items-center gap-2 mb-1">
+              <div className="uppercase tracking-wide font-semibold text-zinc-400 text-xs">
+                {stat.title}
+              </div>
+              <InfoTooltip
+                title={stat.title}
+                description={stat.tooltip}
+              />
             </div>
             <div className={`font-extrabold text-2xl md:text-3xl text-white`}>
               {stat.value}

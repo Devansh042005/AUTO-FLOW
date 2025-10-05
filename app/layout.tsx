@@ -10,6 +10,7 @@ import darkTheme from '@/config/darkTheme'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { PrivyProvider } from '@privy-io/react-auth'
+import { Toaster } from 'react-hot-toast'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -60,6 +61,19 @@ export default function RootLayout({
                 {children}
               </Box>
               <Footer />
+              <Toaster
+                position="top-right"
+                reverseOrder={false}
+                gutter={8}
+                containerStyle={{}}
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    background: '#363636',
+                    color: '#fff',
+                  },
+                }}
+              />
             </Box>
           </ThemeProvider>
         </PrivyProvider>
